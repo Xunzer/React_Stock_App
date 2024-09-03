@@ -1,9 +1,8 @@
 import { StyleSheet, View } from 'react-native';
 
-export default function TabOneScreen() {
+export default function FavoritedScreen() {
   return (
     <View>
-
     </View>
   );
 }

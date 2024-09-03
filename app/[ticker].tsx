@@ -1,9 +1,12 @@
 import { StyleSheet, View } from 'react-native';
+import { useLocalSearchParams } from 'expo-router';
+import { Text } from 'react-native-paper';
 
-export default function TabOneScreen() {
+export default function TickerScreen() {
+  const { ticker } = useLocalSearchParams();
   return (
-    <View>
-
+    <View style={styles.container}>
+      <Text>{ticker}</Text>
     </View>
   );
 }

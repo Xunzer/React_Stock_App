@@ -1,8 +1,8 @@
 import { StyleSheet, View } from 'react-native';
 
-export default function TabOneScreen() {
+export default function SearchScreen() {
   return (
-    <View>
+    <View style={styles.container}>
 
     </View>
   );

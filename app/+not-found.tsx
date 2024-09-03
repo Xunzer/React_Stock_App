@@ -3,6 +3,8 @@ import { StyleSheet } from 'react-native';
 
 import { Text, View } from '@/components/Themed';
 
+
+// whenever you go to a route that doesn't exist, this screen will come in to play
 export default function NotFoundScreen() {
   return (
     <>
