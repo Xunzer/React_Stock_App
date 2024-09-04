@@ -1,5 +1,6 @@
 import { StyleSheet, View } from 'react-native';
 
+// screen for the Favorited tab
 export default function FavoritedScreen() {
   return (
     <View>

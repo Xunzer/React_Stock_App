@@ -1,8 +1,8 @@
 import React from 'react';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
-import { Link, Tabs } from 'expo-router';
+import { Link, Tabs, router } from 'expo-router';
 import { Pressable } from 'react-native';
-
+import { TextInput } from 'react-native-paper';
 import Colors from '@/constants/Colors';
 import { useColorScheme } from '@/components/useColorScheme';
 import { useClientOnlyValue } from '@/components/useClientOnlyValue';
@@ -32,6 +32,19 @@ export default function TabLayout() {
         options={{
           title: 'Home',
           tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
+          // if anyone presses on the search bar, we will bring up the search screen
+          header: () => 
+          <Pressable 
+          style={{ width: "100%", paddingHorizontal: 20, paddingTop: 50 }}
+          onPress={() => router.push("/search")}>
+            <TextInput
+            placeholder="Search Stocks..."
+            onPressIn={() => router.push("/search")}
+            disabled
+            mode="outlined"
+            left={<TextInput.Icon icon={"magnify"} />}
+            />
+          </Pressable>
         }}
       />
       <Tabs.Screen

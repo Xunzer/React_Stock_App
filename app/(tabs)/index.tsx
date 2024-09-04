@@ -1,9 +1,15 @@
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Pressable } from 'react-native';
+import { router } from 'expo-router';
+import { Text } from 'react-native-paper';
 
-export default function TabOneScreen() {
+export default function HomeScreen() {
   return (
-    <View>
-
+    <View style={{ flex: 1 , paddingTop: 30}}>
+        <Text 
+        style={{ fontWeight: "bold", marginLeft: 5, marginBottom: 5 }}
+        variant="titleLarge">
+          Current Stocks
+        </Text>
     </View>
   );
 }

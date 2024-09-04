@@ -45,6 +45,7 @@ export default function RootLayout() {
   return <RootLayoutNav />;
 }
 
+// register the basic tabs, the search screen and ticker screen
 function RootLayoutNav() {
   return (
     <PaperProvider theme={theme}>

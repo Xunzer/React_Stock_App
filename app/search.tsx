@@ -1,5 +1,6 @@
 import { StyleSheet, View } from 'react-native';
 
+// whenever the user types in the name of the stock, there will be pop ups for the valid options, and whenever they click on the option, there will be a ticker, and we will pass the ticker to the screen and pull the data for displaying
 export default function SearchScreen() {
   return (
     <View style={styles.container}>

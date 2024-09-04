@@ -2,8 +2,10 @@ import { StyleSheet, View } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import { Text } from 'react-native-paper';
 
+// naming the file with "[]" creates a route where "ticker" is dynamic input
 export default function TickerScreen() {
   const { ticker } = useLocalSearchParams();
+  
   return (
     <View style={styles.container}>
       <Text>{ticker}</Text>
