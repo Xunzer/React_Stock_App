@@ -32,7 +32,7 @@ export default function TabLayout() {
         options={{
           title: 'Home',
           tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
-          // if anyone presses on the search bar, we will bring up the search screen
+          // if anyone presses on the search bar, we will bring up the search screen and keyboard
           header: () => 
           <Pressable 
           style={{ width: "100%", paddingHorizontal: 20, paddingTop: 50 }}
