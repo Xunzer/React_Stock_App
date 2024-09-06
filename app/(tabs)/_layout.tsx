@@ -35,14 +35,14 @@ export default function TabLayout() {
           // if anyone presses on the search bar, we will bring up the search screen and keyboard
           header: () => 
           <Pressable 
-          style={{ width: "100%", paddingHorizontal: 20, paddingTop: 50 }}
-          onPress={() => router.push("/search")}>
+            style={{ width: "100%", paddingHorizontal: 20, paddingTop: 50 }}
+            onPress={() => router.push("/search")}>
             <TextInput
-            placeholder="Search Stocks..."
-            onPressIn={() => router.push("/search")}
-            disabled
-            mode="outlined"
-            left={<TextInput.Icon icon={"magnify"} />}
+              placeholder="Search Stocks..."
+              onPressIn={() => router.push("/search")}
+              disabled
+              mode="outlined"
+              left={<TextInput.Icon icon={"magnify"} />}
             />
           </Pressable>
         }}

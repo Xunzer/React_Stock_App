@@ -16,17 +16,17 @@ export default function HomeScreen() {
         </Text>
         {/* keyExtractor pulls the ticker attribute from the each stock in the list to make it primary key for rendering, data is imported from data.tsx and renderItem renders each stock in the list to a pressable that could send user to the specific ticker screen */}
         <FlatList keyExtractor={(item) => item.ticker}
-        data={stocks}
-        renderItem={({ item }) => (
-          <StockCard
-          companyName={item.companyName}
-          image={item.image}
-          price={item.price}
-          priceChange={item.priceChange}
-          priceChangePercentage={item.priceChangePercentage}
-          ticker={item.ticker}
-          />
-        )}
+          data={stocks}
+          renderItem={({ item }) => (
+            <StockCard
+              companyName={item.companyName}
+              image={item.image}
+              price={item.price}
+              priceChange={item.priceChange}
+              priceChangePercentage={item.priceChangePercentage}
+              ticker={item.ticker}
+            />
+          )}
         />
     </View>
   );

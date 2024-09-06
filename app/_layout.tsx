@@ -8,6 +8,7 @@ import 'react-native-reanimated';
 import { PaperProvider, TextInput } from 'react-native-paper';
 import { theme } from '@/theme';
 import { SearchableStock } from '@/data';
+import { searchStock } from '@/utils/searchStock';
 
 
 export {
@@ -78,14 +79,22 @@ function RootLayoutNav() {
             <Stack.Screen name="search" options={{ 
               headerTitle: () => 
               <TextInput 
-              style={{ width: "88%", height: "100%" }} 
+              style={{ width: "80%", height: 45 }} 
               mode="outlined" 
               placeholder="Search Stocks..." 
               autoFocus
               dense 
               onChangeText={(text: string) => {
-                setSearchQuery(text);
                 // in real life scenarios we would usually call an API that points to some sort of database
+                setSearchQuery(text);
+                // get the possbile stocks based on the text and set up the searchedStock state array
+                const stocks = searchStock(text);
+                setSearchedStock(stocks);
+              }}
+              onFocus={() => {
+                // Clear the query and searchedStock array when the search bar gains taps
+                setSearchQuery("");
+                setSearchedStock([]);
               }}>
 
               </TextInput> }} />
