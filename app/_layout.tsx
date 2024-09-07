@@ -1,3 +1,4 @@
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { DarkTheme, ThemeProvider } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
@@ -55,15 +56,15 @@ export const StoreContext = createContext<{
   setSearchQuery: (text: string) => void,
   searchedStock: SearchableStock[],
   setSearchedStock: (stocks: SearchableStock[]) => void,
-  favoritedStock: string[]
-  updateFavoritedStock: (ticker: string, op: "add" | "del") => void
+  favoritedStocks: string[]
+  updateFavoritedStocks: (ticker: string, op: "add" | "del") => void
 }>({
   searchQuery: "",
   setSearchQuery: () => {},
   searchedStock: [],
   setSearchedStock: () => {},
-  favoritedStock: [],
-  updateFavoritedStock: () => {}
+  favoritedStocks: [],
+  updateFavoritedStocks: () => {}
 });
 
 // register the basic tabs, the search screen and ticker screen
@@ -71,43 +72,66 @@ function RootLayoutNav() {
   // initialize the states for the query and the returned stocks
   const [searchQuery, setSearchQuery] = useState("");
   const [searchedStock, setSearchedStock] = useState<SearchableStock[]>([]);
-  const [favoritedStock, setFavoritedStock] = useState<string[]>([]);
+  const [favoritedStocks, setFavoritedStocks] = useState<string[]>([]);
 
-  const updateFavoritedStock = (ticker: string, op: "add" | "del") => {
-    
-  }
+  const updateFavoritedStocks = async (ticker: string, op: "add" | "del") => {
+    const prevStocks = [...favoritedStocks];
+    const newStocks =
+      op === "del"
+        ? prevStocks.filter((symbol) => symbol !== ticker)
+        : [ticker, ...prevStocks];
+
+    try {
+      await AsyncStorage.setItem("favorited", JSON.stringify(newStocks));
+      setFavoritedStocks(newStocks);
+    } catch (error) {
+      setFavoritedStocks(prevStocks);
+    }
+  };
+
+  useEffect(() => {
+    async function getFavoritedStocks() {
+      const stocks = await AsyncStorage.getItem("favorited");
+      if (stocks) setFavoritedStocks(JSON.parse(stocks));
+    }
+
+    getFavoritedStocks();
+  }, []);
+
   return (
     <PaperProvider theme={theme}>
       <ThemeProvider value={DarkTheme}>
         {/* context provider is used to provide the context values to its child components like the stack */}
-        <StoreContext.Provider value={{searchQuery, setSearchQuery, searchedStock, setSearchedStock}}>
-          <Stack>
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-            {/* define the outlook of the search screen */}
-            <Stack.Screen name="search" options={{ 
-              headerTitle: () => 
-              <TextInput 
-              style={{ width: "80%", height: 45 }} 
-              mode="outlined" 
-              placeholder="Search Stocks..." 
-              autoFocus
-              dense 
-              onChangeText={(text: string) => {
-                // in real life scenarios we would usually call an API that points to some sort of database
-                setSearchQuery(text);
-                // get the possbile stocks based on the text and set up the searchedStock state array
-                const stocks = searchStock(text);
-                setSearchedStock(stocks);
-              }}
-              onFocus={() => {
-                // Clear the query and searchedStock array when the search bar gains taps
-                setSearchQuery("");
-                setSearchedStock([]);
-              }}>
+        <StoreContext.Provider value={{searchQuery, setSearchQuery, searchedStock, setSearchedStock, favoritedStocks, updateFavoritedStocks}}>
+          <GestureHandlerRootView style={{ flex: 1 }}>
+            <Stack>
+              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+              {/* define the outlook of the search screen */}
+              <Stack.Screen name="search" options={{ 
+                headerTitle: () => 
+                <TextInput 
+                style={{ width: "80%", height: 45 }} 
+                mode="outlined" 
+                placeholder="Search Stocks..." 
+                autoFocus
+                dense 
+                onChangeText={(text: string) => {
+                  // in real life scenarios we would usually call an API that points to some sort of database
+                  setSearchQuery(text);
+                  // get the possbile stocks based on the text and set up the searchedStock state array
+                  const stocks = searchStock(text);
+                  setSearchedStock(stocks);
+                }}
+                onFocus={() => {
+                  // Clear the query and searchedStock array when the search bar gains taps
+                  setSearchQuery("");
+                  setSearchedStock([]);
+                }}>
 
-              </TextInput> }} />
-            <Stack.Screen name="[ticker]" options={{ headerShown: false }} />
-          </Stack>
+                </TextInput> }} />
+              <Stack.Screen name="[ticker]" options={{ headerShown: false }} />
+            </Stack>
+          </GestureHandlerRootView>
         </StoreContext.Provider>
       </ThemeProvider>
     </PaperProvider>

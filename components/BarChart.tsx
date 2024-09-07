@@ -38,7 +38,7 @@ export const BarChart = ({
             />
         </View>
     );
-}
+};
 
 // define the styles for component (container and text)
 const styles = StyleSheet.create({

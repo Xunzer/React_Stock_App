@@ -7,20 +7,21 @@ import { selectStock, selectStockPrices } from '@/utils/searchStock';
 import { Image } from 'expo-image';
 import { formatCurrencyValue } from '@/utils/formatCurrencyValue';
 import { LineChart } from 'react-native-gifted-charts';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { BarChart } from '@/components/BarChart';
+import { StoreContext } from './_layout';
 
 // naming the file with "[]" creates a route where "ticker" is dynamic input
 export default function TickerScreen() {
   const { ticker } = useLocalSearchParams();
   // inform typescript that ticker is a string
   const stock = selectStock(ticker as string);
-  const stockPrices = selectStockPrices(ticker as string);
+  const stockPrices = selectStockPrices(ticker as string); 
   const { width } = useWindowDimensions();
   const positiveOverallPriceChange = stockPrices && stockPrices[0].value < stockPrices[stockPrices.length - 1].value;
-  const options = ["Description", "Historical Metrics"]
-
+  const options = ["Description", "Historical Metrics"];
   const [selectedOption, setSelectedOption] = useState(options[0]);
+  const { favoritedStocks, updateFavoritedStocks } = useContext(StoreContext);
 
   return (
     <SafeAreaView 
@@ -41,8 +42,11 @@ export default function TickerScreen() {
         <Pressable onPress={() => router.back()}>
           <MaterialCommunityIcons name="chevron-left" color={"white"} size={40} />
         </Pressable>
-        <Pressable>
-          <MaterialCommunityIcons name="heart-plus-outline" color={"white"} size={40} />
+        <Pressable onPress={() => {
+          if (favoritedStocks.includes(ticker as string)) return updateFavoritedStocks(ticker as string, "del");
+          return updateFavoritedStocks(ticker as string, "add");
+        }}>
+          <MaterialCommunityIcons name={favoritedStocks.includes(ticker as string) ? "heart" : "heart-plus-outline"} color={"white"} size={40} />
         </Pressable>
       </View>
       {stock ? <FlatList
@@ -65,80 +69,82 @@ export default function TickerScreen() {
             </View>
             <View style={{ paddingTop: 20}}>
               {/* it is an area chart */}
-              <LineChart
-                    areaChart
-                    data={stockPrices}
-                    rotateLabel
-                    labelsExtraHeight={20}
-                    hideDataPoints
-                    spacing={width / stockPrices.length - 2}
-                    color={positiveOverallPriceChange ? "green" : "red"}
-                    thickness={2}
-                    startFillColor={positiveOverallPriceChange ? "green" : "red"}
-                    endFillColor={positiveOverallPriceChange ? "green" : "red"}
-                    startOpacity={0.9}
-                    endOpacity={0.2}
-                    initialSpacing={0}
-                    hideYAxisText={true}
-                    rulesType="solid"
-                    rulesColor="black"
-                    xAxisColor="lightgray"
-                    pointerConfig={{
-                      pointerStripHeight: 140,
-                      pointerStripColor: "lightgray",
-                      pointerStripWidth: 2,
-                      pointerColor: "lightgray",
-                      radius: 6,
-                      pointerLabelWidth: 100,
-                      pointerLabelHeight: 90,
-                      activatePointersOnLongPress: true,
-                      autoAdjustPointerLabelPosition: false,
-                      pointerLabelComponent: (items: any) => {
-                        return (
+              {stockPrices && (
+                <LineChart
+                  areaChart
+                  data={stockPrices}
+                  rotateLabel
+                  labelsExtraHeight={20}
+                  hideDataPoints
+                  spacing={width / stockPrices.length - 2}
+                  color={positiveOverallPriceChange ? "green" : "red"}
+                  thickness={2}
+                  startFillColor={positiveOverallPriceChange ? "green" : "red"}
+                  endFillColor={positiveOverallPriceChange ? "green" : "red"}
+                  startOpacity={0.9}
+                  endOpacity={0.2}
+                  initialSpacing={0}
+                  hideYAxisText={true}
+                  rulesType="solid"
+                  rulesColor="black"
+                  xAxisColor="lightgray"
+                  pointerConfig={{
+                    pointerStripHeight: 140,
+                    pointerStripColor: "lightgray",
+                    pointerStripWidth: 2,
+                    pointerColor: "lightgray",
+                    radius: 6,
+                    pointerLabelWidth: 100,
+                    pointerLabelHeight: 90,
+                    activatePointersOnLongPress: true,
+                    autoAdjustPointerLabelPosition: false,
+                    pointerLabelComponent: (items: any) => {
+                      return (
+                        <View
+                          style={{
+                            height: 90,
+                            width: 100,
+                            justifyContent: "center",
+                            marginTop: -30,
+                            marginLeft: -40,
+                            borderRadius: 5,
+                          }}
+                        >
+                          <Text
+                            style={{
+                              color: "white",
+                              fontSize: 14,
+                              marginBottom: 6,
+                              textAlign: "center",
+                            }}
+                          >
+                            {items[0].date}
+                          </Text>
+
                           <View
                             style={{
-                              height: 90,
-                              width: 100,
-                              justifyContent: "center",
-                              marginTop: -30,
-                              marginLeft: -40,
-                              borderRadius: 5,
+                              paddingHorizontal: 14,
+                              paddingVertical: 6,
+                              borderRadius: 16,
+                              backgroundColor: "white",
                             }}
                           >
                             <Text
                               style={{
-                                color: "white",
-                                fontSize: 14,
-                                marginBottom: 6,
+                                fontWeight: "bold",
                                 textAlign: "center",
+                                color: "black",
                               }}
                             >
-                              {items[0].date}
+                              {"$" + items[0].value.toFixed(2)}
                             </Text>
-
-                            <View
-                              style={{
-                                paddingHorizontal: 14,
-                                paddingVertical: 6,
-                                borderRadius: 16,
-                                backgroundColor: "white",
-                              }}
-                            >
-                              <Text
-                                style={{
-                                  fontWeight: "bold",
-                                  textAlign: "center",
-                                  color: "black",
-                                }}
-                              >
-                                {"$" + items[0].value.toFixed(2)}
-                              </Text>
-                            </View>
                           </View>
-                        );
-                      },
-                    }}
-                  />
+                        </View>
+                      );
+                    },
+                  }}
+                />
+              )}
             </View>
             <FlatList 
               data={options} 
