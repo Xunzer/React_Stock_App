@@ -107,7 +107,8 @@ function RootLayoutNav() {
             <Stack>
               <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
               {/* define the outlook of the search screen */}
-              <Stack.Screen name="search" options={{ 
+              <Stack.Screen name="search" options={{
+                headerBackTitleVisible: false, 
                 headerTitle: () => 
                 <TextInput 
                 style={{ width: "80%", height: 45 }} 
