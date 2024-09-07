@@ -9,7 +9,7 @@ import { PaperProvider, TextInput } from 'react-native-paper';
 import { theme } from '@/theme';
 import { SearchableStock } from '@/data';
 import { searchStock } from '@/utils/searchStock';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -49,17 +49,21 @@ export default function RootLayout() {
   return <RootLayoutNav />;
 }
 
-// define a React context that is used to share state across components in application without having to pass props manually at every level
+// define a React context that is used to share state across components in application without having to pass props manually at every level, the values and functions are placeholders at this step
 export const StoreContext = createContext<{
   searchQuery: string, 
-  setSearchQuery: (text: string) => void
-  searchedStock: SearchableStock[]
-  setSearchedStock: (stocks: SearchableStock[]) => void}
->({
+  setSearchQuery: (text: string) => void,
+  searchedStock: SearchableStock[],
+  setSearchedStock: (stocks: SearchableStock[]) => void,
+  favoritedStock: string[]
+  updateFavoritedStock: (ticker: string, op: "add" | "del") => void
+}>({
   searchQuery: "",
   setSearchQuery: () => {},
   searchedStock: [],
-  setSearchedStock: () => {}
+  setSearchedStock: () => {},
+  favoritedStock: [],
+  updateFavoritedStock: () => {}
 });
 
 // register the basic tabs, the search screen and ticker screen
@@ -67,7 +71,11 @@ function RootLayoutNav() {
   // initialize the states for the query and the returned stocks
   const [searchQuery, setSearchQuery] = useState("");
   const [searchedStock, setSearchedStock] = useState<SearchableStock[]>([]);
+  const [favoritedStock, setFavoritedStock] = useState<string[]>([]);
 
+  const updateFavoritedStock = (ticker: string, op: "add" | "del") => {
+    
+  }
   return (
     <PaperProvider theme={theme}>
       <ThemeProvider value={DarkTheme}>
